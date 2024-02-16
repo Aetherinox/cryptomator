@@ -1,0 +1,6 @@
+# created during build
+Cryptomator.app/
+runtime/
+dmg/
+*.dmg
+license.rtf

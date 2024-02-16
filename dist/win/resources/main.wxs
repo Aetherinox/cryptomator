@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+  <?ifdef JpIsSystemWide ?>
+    <?define JpInstallScope="perMachine"?>
+  <?else?>
+    <?define JpInstallScope="perUser"?>
+  <?endif?>
+
+  <?define JpProductLanguage=1033 ?>
+  <?define JpInstallerVersion=200 ?>
+  <?define JpCompressedMsi=yes ?>
+
+  <?ifdef JpAllowUpgrades ?>
+    <?define JpUpgradeVersionOnlyDetectUpgrade="no"?>
+  <?else?>
+    <?define JpUpgradeVersionOnlyDetectUpgrade="yes"?>
+  <?endif?>
+  <?ifdef JpAllowDowngrades ?>
+    <?define JpUpgradeVersionOnlyDetectDowngrade="no"?>
+  <?else?>
+    <?define JpUpgradeVersionOnlyDetectDowngrade="yes"?>
+  <?endif?>
+
+  <!-- Cryptomator defaults -->
+  <?define IconFileEncryptedData= "Cryptomator-Vault.ico" ?>
+  <?define ProgIdContentType= "application/vnd.cryptomator.encrypted" ?>
+  <?define CloseApplicationTarget= "cryptomator.exe" ?>
+
+  <?include $(var.JpConfigDir)/overrides.wxi ?>
+
+  <Product
+    Id="$(var.JpProductCode)"
+    Name="$(var.JpAppName)"
+    Language="$(var.JpProductLanguage)"
+    Version="$(var.JpAppVersion)"
+    Manufacturer="$(var.JpAppVendor)"
+    UpgradeCode="$(var.JpProductUpgradeCode)">
+
+    <Package
+      Description="$(var.JpAppDescription)"
+      Manufacturer="$(var.JpAppVendor)"
+      InstallerVersion="$(var.JpInstallerVersion)"
+      Compressed="$(var.JpCompressedMsi)"
+      InstallScope="$(var.JpInstallScope)" Platform="x64"
+    />
+
+    <Media Id="1" Cabinet="Data.cab" EmbedCab="yes" />
+
+    <Upgrade Id="$(var.JpProductUpgradeCode)">
+      <UpgradeVersion
+        OnlyDetect="$(var.JpUpgradeVersionOnlyDetectUpgrade)"
+        Property="JP_UPGRADABLE_FOUND"
+        Maximum="$(var.JpAppVersion)"
+        MigrateFeatures="yes"
+        IncludeMaximum="yes" />  <!-- TODO: check if this needs to be set to yes-->
+      <UpgradeVersion
+        OnlyDetect="$(var.JpUpgradeVersionOnlyDetectDowngrade)"
+        Property="JP_DOWNGRADABLE_FOUND"
+        Minimum="$(var.JpAppVersion)"
+        MigrateFeatures="yes"
+        IncludeMinimum="$(var.JpUpgradeVersionOnlyDetectDowngrade)" />
+    </Upgrade>
+
+    <?ifndef JpAllowUpgrades ?>
+    <CustomAction Id="JpDisallowUpgrade" Error="!(loc.DisallowUpgradeErrorMessage)" />
+    <?endif?>
+    <?ifndef JpAllowDowngrades ?>
+    <CustomAction Id="JpDisallowDowngrade" Error="!(loc.DowngradeErrorMessage)" />
+    <?endif?>
+
+    <Binary Id="JpCaDll" SourceFile="$(env.JP_WIXHELPER_DIR)\wixhelper.dll"/>
+    <CustomAction Id="JpFindRelatedProducts" BinaryKey="JpCaDll" DllEntry="FindRelatedProductsEx" />
+
+    <?ifndef SkipCryptomatorLegacyCheck ?>
+      <!-- Block installation if innosetup entry of Cryptomator is found -->
+      <Property Id="OLDEXEINSTALLER">
+        <RegistrySearch Id="InnoSetupInstallation" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\Cryptomator_is1" Type="raw" Name="DisplayName" />
+      </Property>
+      <!-- TODO: localize -->
+      <Condition Message="A lower version of [ProductName] is already installed. Uninstall it first and then start the setup again. Setup will now exit.">
+          <![CDATA[Installed OR NOT OLDEXEINSTALLER]]>
+      </Condition>
+    <?endif?>
+    <!-- Cryptomator uses UNIX Sockets, which are supported starting with Windows 10 v1803-->
+    <Property Id="WINDOWSBUILDNUMBER" Secure="yes">
+      <RegistrySearch Id="BuildNumberSearch" Root="HKLM" Key="SOFTWARE\Microsoft\Windows NT\CurrentVersion" Name="CurrentBuildNumber" Type="raw" />
+    </Property>
+    <Condition Message="This application requires Windows 10 version 1803 (build 17134) or newer.">
+      <![CDATA[Installed OR (WINDOWSBUILDNUMBER >= 17134)]]>
+    </Condition>
+
+    <!-- Non-Opening ProgID -->
+    <DirectoryRef Id="INSTALLDIR">
+        <Component Win64="yes" Id="nonStartingProgID" >
+          <File Id="IconFileForEncryptedData" KeyPath="yes" Source="$(env.JP_WIXWIZARD_RESOURCES)\$(var.IconFileEncryptedData)" Name="$(var.IconFileEncryptedData)"></File>
+          <ProgId Id="$(var.JpAppName).Encrypted.1" Description="$(var.JpAppName) Encrypted Data" Icon="IconFileForEncryptedData" IconIndex="0">
+            <Extension Id="c9r" Advertise="no" ContentType="$(var.ProgIdContentType)">
+              <MIME ContentType="$(var.ProgIdContentType)" Default="yes"></MIME>
+            </Extension>
+            <Extension Id="c9s" Advertise="no" ContentType="$(var.ProgIdContentType)"/>
+          </ProgId>
+        </Component>
+    </DirectoryRef>
+
+    <!-- Standard required root -->
+    <Directory Id="TARGETDIR" Name="SourceDir"/>
+
+    <Feature Id="DefaultFeature" Title="!(loc.MainFeatureTitle)" Level="1">
+      <ComponentGroupRef Id="Shortcuts"/>
+      <ComponentGroupRef Id="Files"/>
+      <ComponentGroupRef Id="FileAssociations"/>
+      <!-- Ref to additional ProgIDs -->
+      <ComponentRef Id="nonStartingProgID" />
+    </Feature>
+
+    <CustomAction Id="JpSetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[INSTALLDIR]" />
+    <CustomAction Id="JpSetARPCOMMENTS" Property="ARPCOMMENTS" Value="$(var.JpAppDescription)" />
+    <CustomAction Id="JpSetARPCONTACT" Property="ARPCONTACT" Value="$(var.JpAppVendor)" />
+    <CustomAction Id="JpSetARPSIZE" Property="ARPSIZE" Value="$(var.JpAppSizeKb)" />
+
+    <?ifdef JpHelpURL ?>
+      <CustomAction Id="JpSetARPHELPLINK" Property="ARPHELPLINK" Value="$(var.JpHelpURL)" />
+    <?endif?>
+
+    <?ifdef JpAboutURL ?>
+      <CustomAction Id="JpSetARPURLINFOABOUT" Property="ARPURLINFOABOUT" Value="$(var.JpAboutURL)" />
+    <?endif?>
+
+    <?ifdef JpUpdateURL ?>
+      <CustomAction Id="JpSetARPURLUPDATEINFO" Property="ARPURLUPDATEINFO" Value="$(var.JpUpdateURL)" />
+    <?endif?>
+
+    <Property Id="WixQuietExec64CmdTimeout" Value="20" />
+    <!-- Note for custom actions: Immediate CAs run BEFORE the files are installed, hence if you depend on installed files, the CAs must be deferred.-->
+    <!-- WebDAV patches -->
+    <SetProperty Id="PatchWebDAV" Value="&quot;[INSTALLDIR]patchWebDAV.bat&quot;"
+            Sequence="execute" Before="PatchWebDAV" />
+    <CustomAction Id="PatchWebDAV" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="ignore" Impersonate="no"/>
+
+    <!-- Special Settings migration for 1.7.0,. Should be removed eventually, for more info, see ../contrib/version170-migrate-settings.ps1-->
+    <SetProperty Id="V170MigrateSettings" Value="&quot;[INSTALLDIR]version170-migrate-settings.bat&quot;"
+            Sequence="execute" Before="V170MigrateSettings" />
+    <CustomAction Id="V170MigrateSettings" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="ignore" Impersonate="no"/>
+
+    <!-- Running App detection and exit -->
+    <Property Id="FOUNDRUNNINGAPP" Admin="yes"/>
+    <util:CloseApplication
+      Target="$(var.CloseApplicationTarget)"
+      Id="Close$(var.JpAppName)"
+      CloseMessage="no"
+      RebootPrompt="no"
+      PromptToContinue="yes"
+      Description="A running instance of $(var.JpAppName) is found, using files marked for update. Please close it to continue."
+      Property="FOUNDRUNNINGAPP"
+      >
+    </util:CloseApplication>
+    <CustomAction Id="FailOnRunningApp" Error="Installation aborted, because files marked for update are used by a running instance of $(var.JpAppName)."/>
+
+    <?ifdef JpIcon ?>
+    <Property Id="ARPPRODUCTICON" Value="JpARPPRODUCTICON"/>
+    <Icon Id="JpARPPRODUCTICON" SourceFile="$(var.JpIcon)"/>
+    <?endif?>
+
+    <UIRef Id="JpUI"/>
+
+    <InstallExecuteSequence>
+      <Custom Action="JpSetARPINSTALLLOCATION" After="CostFinalize">Not Installed</Custom>
+      <Custom Action="JpSetARPCOMMENTS" After="CostFinalize">Not Installed</Custom>
+      <Custom Action="JpSetARPCONTACT" After="CostFinalize">Not Installed</Custom>
+      <Custom Action="JpSetARPSIZE" After="CostFinalize">Not Installed</Custom>
+      <?ifdef JpHelpURL ?>
+        <Custom Action="JpSetARPHELPLINK" After="CostFinalize">Not Installed</Custom>
+      <?endif?>
+      <?ifdef JpAboutURL ?>
+        <Custom Action="JpSetARPURLINFOABOUT" After="CostFinalize">Not Installed</Custom>
+      <?endif?>
+      <?ifdef JpUpdateURL ?>
+        <Custom Action="JpSetARPURLUPDATEINFO" After="CostFinalize">Not Installed</Custom>
+      <?endif?>
+
+      <?ifndef JpAllowUpgrades ?>
+      <Custom Action="JpDisallowUpgrade" After="JpFindRelatedProducts">JP_UPGRADABLE_FOUND</Custom>
+      <?endif?>
+      <?ifndef JpAllowDowngrades ?>
+      <Custom Action="JpDisallowDowngrade" After="JpFindRelatedProducts">JP_DOWNGRADABLE_FOUND</Custom>
+      <?endif?>
+      <Custom Action="JpFindRelatedProducts" After="FindRelatedProducts"/>
+
+      <!-- Check and fail if Cryptomator is running -->
+      <Custom Action="WixCloseApplications" Before="InstallValidate"></Custom>
+      <Custom Action="FailOnRunningApp" After="WixCloseApplications" >FOUNDRUNNINGAPP</Custom>
+
+      <RemoveExistingProducts After="InstallValidate"/> <!-- Moved from CostInitialize, due to WixCloseApplications -->
+
+      <Custom Action="PatchWebDAV" After="InstallFiles">NOT Installed OR REINSTALL</Custom>
+      <Custom Action="V170MigrateSettings" After="InstallFiles">NOT Installed OR REINSTALL</Custom>
+    </InstallExecuteSequence>
+
+    <InstallUISequence>
+      <Custom Action="JpFindRelatedProducts" After="FindRelatedProducts"/>
+    </InstallUISequence>
+
+    <WixVariable Id="WixUIBannerBmp" Value="$(env.JP_WIXWIZARD_RESOURCES)\banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(env.JP_WIXWIZARD_RESOURCES)\background.bmp" />
+  </Product>
+
+</Wix>

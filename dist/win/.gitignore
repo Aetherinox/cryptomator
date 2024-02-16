@@ -1,0 +1,9 @@
+runtime
+Cryptomator
+installer
+*.wixobj
+*.pdb
+*.msi
+*.exe
+*.jmod
+license.rtf
