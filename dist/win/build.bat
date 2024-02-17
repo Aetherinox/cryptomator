@@ -3,8 +3,8 @@
 SET APPNAME="Cryptomator"
 SET MAIN_JAR_GLOB="cryptomator-*"
 SET UPGRADE_UUID="bda45523-42b1-4cae-9354-a45475ed4775"
-SET VENDOR="Skymatic GmbH"
-SET FIRST_COPYRIGHT_YEAR=2016
+SET VENDOR="Aetherinox"
+SET FIRST_COPYRIGHT_YEAR=2024
 SET ABOUT_URL="https://cryptomator.org"
 SET UPDATE_URL="https://cryptomator.org/downloads/"
 SET HELP_URL="https://cryptomator.org/contact/"

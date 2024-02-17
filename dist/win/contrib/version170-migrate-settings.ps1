@@ -1,5 +1,5 @@
 # This script migrates Cryptomator settings for all local users on Windows in case the users uses custom directories as mountpoint
-# See also https://github.com/cryptomator/cryptomator/pull/2654.
+# See also https://github.com/Aetherinox/cryptomator/pull/2654.
 #
 # TODO: This script should be evaluated in a yearly interval if it is still needed and if not, should be removed
 #

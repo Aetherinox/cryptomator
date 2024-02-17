@@ -164,7 +164,7 @@ jobs:
               }
               $jar.Dispose()
           }
-      - name: Extract wixhelper.dll for Codesigning #see https://github.com/cryptomator/cryptomator/issues/3130
+      - name: Extract wixhelper.dll for Codesigning #see https://github.com/Aetherinox/cryptomator/issues/3130
         shell: pwsh
         run: |
           New-Item -Path appdir/jpackage-jmod -ItemType Directory
@@ -239,10 +239,10 @@ jobs:
           folder: installer
       - name: Add possible alpha/beta tags to installer name
         run: mv installer/Cryptomator-*.msi Cryptomator-${{ needs.get-version.outputs.semVerStr }}-x64.msi
-      - name: Create detached GPG signature with key 615D449FE6E6A235
+      - name: Create detached GPG signature with key CB5C4C30CD0D4028
         run: |
           echo "${GPG_PRIVATE_KEY}" | gpg --batch --quiet --import
-          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 615D449FE6E6A235 --detach-sign -a Cryptomator-*.msi
+          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u CB5C4C30CD0D4028 --detach-sign -a Cryptomator-*.msi
         env:
           GPG_PRIVATE_KEY: ${{ secrets.RELEASES_GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.RELEASES_GPG_PASSPHRASE }}
@@ -350,10 +350,10 @@ jobs:
           folder: installer
       - name: Add possible alpha/beta tags to installer name
         run: mv installer/Cryptomator-Installer.exe Cryptomator-${{ needs.get-version.outputs.semVerStr }}-x64.exe
-      - name: Create detached GPG signature with key 615D449FE6E6A235
+      - name: Create detached GPG signature with key CB5C4C30CD0D4028
         run: |
           echo "${GPG_PRIVATE_KEY}" | gpg --batch --quiet --import
-          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 615D449FE6E6A235 --detach-sign -a Cryptomator-*.exe
+          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u CB5C4C30CD0D4028 --detach-sign -a Cryptomator-*.exe
         env:
           GPG_PRIVATE_KEY: ${{ secrets.RELEASES_GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.RELEASES_GPG_PASSPHRASE }}

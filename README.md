@@ -2,12 +2,12 @@
 
 <p align="center">
 
-[![Build](https://github.com/cryptomator/cryptomator/workflows/Build/badge.svg)](https://github.com/cryptomator/cryptomator/actions?query=workflow%3ABuild)
-[![Known Vulnerabilities](https://snyk.io/test/github/cryptomator/cryptomator/badge.svg)](https://snyk.io/test/github/cryptomator/cryptomator)
+[![Build](https://github.com/Aetherinox/cryptomator/workflows/Build/badge.svg)](https://github.com/Aetherinox/cryptomator/actions?query=workflow%3ABuild)
+[![Known Vulnerabilities](https://snyk.io/test/github/Aetherinox/cryptomator/badge.svg)](https://snyk.io/test/github/Aetherinox/cryptomator)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=cryptomator_cryptomator&metric=alert_status)](https://sonarcloud.io/dashboard?id=cryptomator_cryptomator)
 [![Twitter](https://img.shields.io/badge/twitter-@Cryptomator-blue.svg?style=flat)](http://twitter.com/Cryptomator)
 [![Crowdin](https://badges.crowdin.net/cryptomator/localized.svg)](https://translate.cryptomator.org/)
-[![Latest Release](https://img.shields.io/github/release/cryptomator/cryptomator.svg)](https://github.com/cryptomator/cryptomator/releases/latest)
+[![Latest Release](https://img.shields.io/github/release/Aetherinox/cryptomator.svg)](https://github.com/Aetherinox/cryptomator/releases/latest)
 [![Community](https://img.shields.io/badge/help-Community-orange.svg)](https://community.cryptomator.org)
 
 </p>

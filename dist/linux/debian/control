@@ -5,8 +5,8 @@ Priority: optional
 Build-Depends: debhelper (>=10), coffeelibs-jdk-21 (>= 21.0.2+12-0ppa1), libgtk2.0-0, libgtk-3-0,  libxxf86vm1, libgl1
 Standards-Version: 4.5.0
 Homepage: https://cryptomator.org
-Vcs-Git: https://github.com/cryptomator/cryptomator.git
-Vcs-browser: https://github.com/cryptomator/cryptomator
+Vcs-Git: https://github.com/Aetherinox/cryptomator.git
+Vcs-browser: https://github.com/Aetherinox/cryptomator
 
 Package: cryptomator
 Architecture: any

@@ -53,7 +53,7 @@ jobs:
             echo $DISCUSSION | jq -c '.repository.discussion | .comments = .comments.totalCount | {(.id|tostring) : .}' > new.json
             jq -s '.[0] * .[1]' original.json new.json > merged.json
           else
-            cat original.json | jq 'del(.[] | select(.url=="https://github.com/cryptomator/cryptomator/discussions/${{ github.event.discussion.number }}"))' > merged.json
+            cat original.json | jq 'del(.[] | select(.url=="https://github.com/Aetherinox/cryptomator/discussions/${{ github.event.discussion.number }}"))' > merged.json
           fi
         env:
           DISCUSSION: ${{ steps.query-data.outputs.result }}

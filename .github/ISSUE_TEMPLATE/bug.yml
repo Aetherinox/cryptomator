@@ -7,9 +7,9 @@ body:
     attributes:
       label: Please agree to the following
       options:
-      - label: I have searched [existing issues](https://github.com/cryptomator/cryptomator/issues?q=) for duplicates
+      - label: I have searched [existing issues](https://github.com/Aetherinox/cryptomator/issues?q=) for duplicates
         required: true
-      - label: I agree to follow this project's [Code of Conduct](https://github.com/cryptomator/cryptomator/blob/develop/.github/CODE_OF_CONDUCT.md)
+      - label: I agree to follow this project's [Code of Conduct](https://github.com/Aetherinox/cryptomator/blob/develop/.github/CODE_OF_CONDUCT.md)
         required: true
   - type: input
     id: summary

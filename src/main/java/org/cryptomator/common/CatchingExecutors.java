@@ -92,7 +92,7 @@ public final class CatchingExecutors {
 	private static void afterExecuteFuture(Future<?> future) {
 		if (future instanceof ScheduledFuture<?> && !future.isDone()) {
 			//we assume that this must be a repeated ScheduledFutureTask, where the done-status is only set when not executed anymore
-			//see also https://github.com/cryptomator/cryptomator/pull/2422
+			//see also https://github.com/Aetherinox/cryptomator/pull/2422
 			return;
 		}
 

@@ -147,10 +147,10 @@ jobs:
           curl -L https://github.com/AppImage/AppImageKit/releases/download/13/appimagetool-${{ matrix.appimage-suffix }}.AppImage -o appimagetool.AppImage
           chmod +x appimagetool.AppImage
           ./appimagetool.AppImage --appimage-extract
-      - name: Prepare GPG-Agent for signing with key 615D449FE6E6A235
+      - name: Prepare GPG-Agent for signing with key CB5C4C30CD0D4028
         run: |
           echo "${GPG_PRIVATE_KEY}" | gpg --batch --quiet --import
-          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 615D449FE6E6A235 --dry-run --sign README.md
+          echo "${GPG_PASSPHRASE}" | gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u CB5C4C30CD0D4028 --dry-run --sign README.md
         env:
           GPG_PRIVATE_KEY: ${{ secrets.RELEASES_GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.RELEASES_GPG_PASSPHRASE }}
@@ -158,11 +158,11 @@ jobs:
         run: >
           ./squashfs-root/AppRun Cryptomator.AppDir cryptomator-${{  needs.get-version.outputs.semVerStr }}-${{ matrix.appimage-suffix }}.AppImage
           -u 'gh-releases-zsync|cryptomator|cryptomator|latest|cryptomator-*-${{ matrix.appimage-suffix }}.AppImage.zsync'
-          --sign --sign-key=615D449FE6E6A235 --sign-args="--batch --pinentry-mode loopback"
+          --sign --sign-key=CB5C4C30CD0D4028 --sign-args="--batch --pinentry-mode loopback"
       - name: Create detached GPG signatures
         run: |
-          gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 615D449FE6E6A235 --detach-sign -a cryptomator-*.AppImage
-          gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u 615D449FE6E6A235 --detach-sign -a cryptomator-*.AppImage.zsync
+          gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u CB5C4C30CD0D4028 --detach-sign -a cryptomator-*.AppImage
+          gpg --batch --quiet --passphrase-fd 0 --pinentry-mode loopback -u CB5C4C30CD0D4028 --detach-sign -a cryptomator-*.AppImage.zsync
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
