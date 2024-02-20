@@ -105,7 +105,7 @@ jobs:
           --module-path target/mods
           --module org.cryptomator.desktop/org.cryptomator.launcher.Cryptomator
           --dest appdir
-          --name Aetherx
+          --name Cryptomator
           --vendor "Aetherinox"
           --copyright "(C) 2024 - Aetherinox"
           --app-version "${{ needs.get-version.outputs.semVerNum }}.${{ needs.get-version.outputs.revNum }}"
