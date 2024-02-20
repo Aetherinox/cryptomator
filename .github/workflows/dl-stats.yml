@@ -55,7 +55,7 @@ jobs:
       - name: Upload Results
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://graphite-us-central1.grafana.net/metrics'
+          url: 'https://graphite-prod-13-prod-us-east-0.grafana.net/graphite/metrics'
           method: 'POST'
           contentType: 'application/json'
           bearerToken: ${{ secrets.GRAFANA_GRAPHITE_TOKEN }}
