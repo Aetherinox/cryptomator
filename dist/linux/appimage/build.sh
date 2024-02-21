@@ -64,7 +64,6 @@ ${JAVA_HOME}/bin/jlink \
     --compress zip-0
 
 # create app dir
-envsubst '${SEMVER_STR} ${REVISION_NUM}' < ../launcher-gtk2.properties > launcher-gtk2.properties
 ${JAVA_HOME}/bin/jpackage \
     --verbose \
     --type app-image \
@@ -128,5 +127,5 @@ chmod +x /tmp/appimagetool.AppImage
 echo ""
 echo "Done. AppImage successfully created: cryptomator-${SEMVER_STR}-${MACHINE_TYPE}.AppImage"
 echo ""
-echo >&2 "To clean up, run: rm -rf Cryptomator.AppDir appdir runtime squashfs-root openjfx-jmods; rm launcher-gtk2.properties /tmp/appimagetool.AppImage openjfx-jmods.zip"
+echo >&2 "To clean up, run: rm -rf Cryptomator.AppDir appdir runtime squashfs-root openjfx-jmods; rm /tmp/appimagetool.AppImage openjfx-jmods.zip"
 echo ""
